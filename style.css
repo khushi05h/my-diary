@@ -1,0 +1,112 @@
+/* Reset & full‑screen background */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+  .background {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    z-index: -1;
+  }
+  .bg-image {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Diary “window” */
+  .diary-screen {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    margin: 5vh auto 0;
+    background: rgba(255,255,255,0.9);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  /* Controls & textarea */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: space-between;
+  }
+  #diaryText {
+    width: 100%;
+    height: 50vh;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: none;
+  }
+  
+  /* Floating items (book, letter, plane) */
+  .floating {
+    position: absolute;
+    animation: float 8s ease-in-out infinite;
+    width: 15vw;
+    max-width: 100px;
+  }
+  .floating-1 { top: 10vh; right: 5vw; }
+  .floating-2 { top: 30vh; left: 10vw; }
+  @keyframes float {
+    0%   { transform: translate(0, 0)    rotate(0deg); }
+    25%  { transform: translate(-1vw, 1vh)  rotate(-5deg); }
+    50%  { transform: translate(-2vw, 0)    rotate(0deg); }
+    75%  { transform: translate(-1vw, -1vh) rotate(5deg); }
+    100% { transform: translate(0, 0)      rotate(0deg); }
+  }
+  
+  /* Boy image at bottom-center */
+  .boy-image {
+    position: absolute;
+    bottom: 1vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20vw;
+    max-width: 150px;
+    z-index: 2;
+  }
+  
+  /* --- MOBILE (up to 600px) --- */
+  @media (max-width: 600px) {
+    /* Diary panel takes most of the screen height */
+    .diary-screen {
+      margin-top: 3vh;
+    }
+    #diaryText {
+      height: 40vh;
+    }
+    /* Slightly larger floating icons */
+    .floating {
+      width: 20vw;
+    }
+    .floating-1 { top: 8vh; right: 5vw; }
+    .floating-2 { top: 25vh; left: 5vw; }
+    /* Boy sits a bit higher */
+    .boy-image {
+      bottom: 5vh;
+      width: 25vw;
+    }
+  }
+  
+  /* --- TABLET (iPad‑like: 601px to 1024px) --- */
+  @media (min-width: 601px) and (max-width: 1024px) {
+    .diary-screen {
+      width: 80%;
+      margin-top: 8vh;
+    }
+    .floating {
+      width: 18vw;
+    }
+    .boy-image {
+      width: 18vw;
+      bottom: 3vh;
+    }
+  }
+  

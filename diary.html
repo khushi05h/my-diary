@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Diary</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="background">
+    <img src="l.avif" alt="Diary BG" class="bg-image">
+    <!-- <img src="l.avif" class="floating floating-1" alt="Book">
+    <img src="writing.png" class="floating floating-2" alt="Letter"> -->
+  </div>
+
+  <div class="diary-screen">
+    <div class="controls">
+      <button id="newBtn">+ New</button>
+      <button id="saveBtn">💾 Save</button>
+      <button id="deleteBtn">🗑 Delete</button>
+      <select id="entryList"></select>
+      <button id="logoutBtn">🚪 Logout</button>
+    </div>
+    <textarea id="diaryText" placeholder="Your thoughts..."></textarea>
+    <img src="writing.png" class="boy-image" alt="Boy">
+  </div>
+
+  <script>
+  // redirect back if not logged in
+  if (!localStorage.getItem('loggedIn')) {
+    location.href = 'index.html';
+  }
+
+  const entryList = document.getElementById('entryList');
+  const diaryText = document.getElementById('diaryText');
+  let entries = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
+  let currentId = null;
+
+  function refreshList() {
+    entryList.innerHTML = '<option value="">— Select Entry —</option>';
+    entries.forEach(e => {
+      const opt = document.createElement('option');
+      opt.value = e.id;
+      opt.text = new Date(e.date).toLocaleString();
+      entryList.append(opt);
+    });
+  }
+
+  entryList.addEventListener('change', () => {
+    currentId = entryList.value;
+    const e = entries.find(x => x.id === currentId);
+    diaryText.value = e ? e.content : '';
+  });
+
+  document.getElementById('newBtn').onclick = () => {
+    currentId = null;
+    diaryText.value = '';
+    entryList.value = '';
+  };
+
+  document.getElementById('saveBtn').onclick = () => {
+    const text = diaryText.value.trim();
+    if (!text) return alert('Type something first!');
+    if (currentId) {
+      // update existing
+      entries = entries.map(e => e.id === currentId ? { ...e, content: text } : e);
+    } else {
+      // new entry
+      const id = 'id' + Date.now();
+      entries.push({ id, content: text, date: Date.now() });
+      currentId = id;
+    }
+    localStorage.setItem('diaryEntries', JSON.stringify(entries));
+    refreshList();
+    entryList.value = currentId;
+    alert('Saved ✅');
+  };
+
+  document.getElementById('deleteBtn').onclick = () => {
+    if (!currentId) return alert('Select an entry first!');
+    if (!confirm('Delete this entry?')) return;
+    entries = entries.filter(e => e.id !== currentId);
+    localStorage.setItem('diaryEntries', JSON.stringify(entries));
+    diaryText.value = '';
+    currentId = null;
+    refreshList();
+  };
+
+  document.getElementById('logoutBtn').onclick = () => {
+    localStorage.removeItem('loggedIn');
+    location.href = 'index.html';
+  };
+
+  // initialize
+  refreshList();
+  </script>
+</body>
+</html>
